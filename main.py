@@ -26,7 +26,7 @@ try:
     from scipy.signal import find_peaks
     ML_AVAILABLE = True
 except ImportError as e:
-    print(f"⚠️ ML libraries not available: {e}")
+    print("⚠️ ML libraries not available: {}".format(e))
     ML_AVAILABLE = False
 
 import hashlib
@@ -35,7 +35,7 @@ import hashlib
 BOT_TOKEN = os.getenv("BOT_TOKEN", "8306210029:AAHl7sxAEEq0FT750MAThHrAioYyAbRI1oI")
 ADMIN_CHAT_ID = None
 SPREADSHEET_ID = "10wI8T-NzqYsq6L73kPZ_bibuv2dw7xhQAmOr0msvk1A"
-CSV_URL = f"https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}/export?format=csv"
+CSV_URL = "https://docs.google.com/spreadsheets/d/{}/export?format=csv".format(SPREADSHEET_ID)
 
 # ======== GLOBALS ========
 bot = telebot.TeleBot(BOT_TOKEN)
@@ -69,7 +69,7 @@ ENSEMBLE_WEIGHTS = {
 # ======== ENHANCED STORAGE ========
 learning_storage_file = "learning_data.json"
 
-def _atomic_write_json(path: str, obj: dict):
+def _atomic_write_json(path, obj):
     import tempfile
     d = os.path.dirname(os.path.abspath(path)) or "."
     try:
@@ -78,7 +78,7 @@ def _atomic_write_json(path: str, obj: dict):
             json.dump(obj, f, indent=2, default=str)
         os.replace(tmp_path, path)
     except Exception as e:
-        print(f"⚠️ Write error: {e}")
+        print("⚠️ Write error: {}".format(e))
         try:
             if 'tmp_path' in locals():
                 os.remove(tmp_path)
@@ -101,7 +101,7 @@ def save_learning_data():
         _atomic_write_json(learning_storage_file, data)
         print("✅ Learning data saved")
     except Exception as e:
-        print(f"⚠️ Error saving learning data: {e}")
+        print("⚠️ Error saving learning data: {}".format(e))
 
 def load_learning_data():
     try:
@@ -131,7 +131,7 @@ def load_learning_data():
         print("✅ Learning state loaded")
         return True
     except Exception as e:
-        print(f"⚠️ Error loading learning data: {e}")
+        print("⚠️ Error loading learning data: {}".format(e))
         return False
 
 # ======== ENHANCED UTILS ========
@@ -157,7 +157,7 @@ def _safe_array(v, default_size=10):
         
         return arr
     except Exception as e:
-        print(f"⚠️ Array conversion error: {e}")
+        print("⚠️ Array conversion error: {}".format(e))
         return np.ones(default_size) / default_size
 
 def _norm(v):
@@ -171,7 +171,7 @@ def _norm(v):
         else:
             return np.ones(10) / 10.0
     except Exception as e:
-        print(f"⚠️ Normalization error: {e}")
+        print("⚠️ Normalization error: {}".format(e))
         return np.ones(10) / 10.0
 
 def _softmax(x, t=1.0):
@@ -196,7 +196,7 @@ def _softmax(x, t=1.0):
         
         return result
     except Exception as e:
-        print(f"⚠️ Softmax error: {e}")
+        print("⚠️ Softmax error: {}".format(e))
         return np.ones(10) / 10.0
 
 def _advanced_softmax(x, temperature=1.0, sharpening=False):
@@ -214,10 +214,10 @@ def _advanced_softmax(x, temperature=1.0, sharpening=False):
         
         return _softmax(a, temperature)
     except Exception as e:
-        print(f"⚠️ Advanced softmax error: {e}")
+        print("⚠️ Advanced softmax error: {}".format(e))
         return np.ones(10) / 10.0
 
-def _parse_date_flexible(s: str):
+def _parse_date_flexible(s):
     """Enhanced date parsing with error handling"""
     if not s:
         return None
@@ -245,7 +245,7 @@ def _parse_date_flexible(s: str):
         except:
             return None
     except Exception as e:
-        print(f"⚠️ Date parsing error: {e}")
+        print("⚠️ Date parsing error: {}".format(e))
         return None
 
 def load_google_sheets_data():
@@ -286,7 +286,7 @@ def load_google_sheets_data():
             print("❌ Could not find valid headers")
             return False
         
-        print(f"✅ Found headers: {headers}")
+        print("✅ Found headers: {}".format(headers))
         
         # Find column indices
         digit_names = ['digit', 'number', 'result', 'winning', 'win']
@@ -312,7 +312,7 @@ def load_google_sheets_data():
             print("❌ Digit column not found")
             return False
         
-        print(f"✅ Column indices - Digit: {idx_digit}, Round: {idx_round}, Date: {idx_date}")
+        print("✅ Column indices - Digit: {}, Round: {}, Date: {}".format(idx_digit, idx_round, idx_date))
         
         # Process data
         valid_count = 0
@@ -360,10 +360,10 @@ def load_google_sheets_data():
                     dates_hist.append(None)
                     
             except Exception as e:
-                print(f"⚠️ Error processing line {line_num}: {e}")
+                print("⚠️ Error processing line {}: {}".format(line_num, e))
                 continue
         
-        print(f"✅ Loaded {len(digits)} valid records (Δ {len(digits)-old_n})")
+        print("✅ Loaded {} valid records (Δ {})".format(len(digits), len(digits)-old_n))
         
         if len(digits) == 0:
             print("❌ No valid data found")
@@ -374,14 +374,14 @@ def load_google_sheets_data():
             feature_cache.clear()
             pattern_cache.clear()
         
-        print(f"📈 Latest digits: {digits[-10:] if len(digits) >= 10 else digits}")
+        print("📈 Latest digits: {}".format(digits[-10:] if len(digits) >= 10 else digits))
         return True
         
     except requests.exceptions.RequestException as e:
-        print(f"❌ Network error loading data: {e}")
+        print("❌ Network error loading data: {}".format(e))
         return False
     except Exception as e:
-        print(f"❌ Error loading data: {e}")
+        print("❌ Error loading data: {}".format(e))
         return False
 
 # ======== ENHANCED STATS HOLDERS ========
@@ -411,7 +411,7 @@ def _make_features(series, rounds=None, dates=None):
         if len(series) < 10:
             return None
         
-        cache_key = f"orig_{len(series)}_{hash(str(series[-20:]) if len(series) >= 20 else str(series))}"
+        cache_key = "orig_{}_{}".format(len(series), hash(str(series[-20:]) if len(series) >= 20 else str(series)))
         if cache_key in feature_cache:
             return feature_cache[cache_key]
         
@@ -462,7 +462,7 @@ def _make_features(series, rounds=None, dates=None):
                 acc = np.ones(10) / 10.0
             feats.extend(list(acc))
         except Exception as e:
-            print(f"⚠️ EWMA error: {e}")
+            print("⚠️ EWMA error: {}".format(e))
             feats.extend([0.1] * 10)
         
         # Streak calculation
@@ -487,7 +487,7 @@ def _make_features(series, rounds=None, dates=None):
                 for w in range(7):
                     feats.append(1 if wd == w else 0)
             except Exception as e:
-                print(f"⚠️ Date feature error: {e}")
+                print("⚠️ Date feature error: {}".format(e))
                 feats.extend([0] * 7)
         else:
             feats.extend([0] * 7)
@@ -503,7 +503,7 @@ def _make_features(series, rounds=None, dates=None):
                 for rv in range(1, 9):
                     feats.append(1 if rcur == rv else 0)
             except Exception as e:
-                print(f"⚠️ Round feature error: {e}")
+                print("⚠️ Round feature error: {}".format(e))
                 feats.extend([0] * 8)
         else:
             feats.extend([0] * 8)
@@ -515,7 +515,7 @@ def _make_features(series, rounds=None, dates=None):
         return feats
         
     except Exception as e:
-        print(f"⚠️ Feature extraction error: {e}")
+        print("⚠️ Feature extraction error: {}".format(e))
         return None
 
 def _build_xy(series, rounds=None, dates=None):
@@ -536,10 +536,10 @@ def _build_xy(series, rounds=None, dates=None):
             X.append(feats)
             y.append(series[i])
         
-        print(f"✅ Built training data: {len(X)} samples")
+        print("✅ Built training data: {} samples".format(len(X)))
         return X, y
     except Exception as e:
-        print(f"⚠️ XY building error: {e}")
+        print("⚠️ XY building error: {}".format(e))
         return [], []
 
 # ======== SAFE MODELS ========
@@ -561,7 +561,7 @@ def train_randomforest_advanced():
             print("⚠️ Insufficient training samples")
             return None
         
-        print(f"🤖 Training Random Forest with {len(X)} samples...")
+        print("🤖 Training Random Forest with {} samples...".format(len(X)))
         
         # Safe train-test split
         try:
@@ -592,11 +592,11 @@ def train_randomforest_advanced():
         train_score = model.score(X_tr, y_tr)
         val_score = model.score(X_va, y_va)
         
-        print(f"✅ RF trained - Train: {train_score:.3f}, Val: {val_score:.3f}")
+        print("✅ RF trained - Train: {:.3f}, Val: {:.3f}".format(train_score, val_score))
         return model
         
     except Exception as e:
-        print(f"❌ RF training error: {e}")
+        print("❌ RF training error: {}".format(e))
         return None
 
 def train_gradientboosting_advanced():
@@ -612,7 +612,7 @@ def train_gradientboosting_advanced():
         if len(X) < 50:
             return None
         
-        print(f"🤖 Training Gradient Boosting...")
+        print("🤖 Training Gradient Boosting...")
         
         model = GradientBoostingClassifier(
             n_estimators=100,  # Reduced for stability
@@ -626,11 +626,11 @@ def train_gradientboosting_advanced():
         model.fit(X, y)
         score = model.score(X, y)
         
-        print(f"✅ GB trained - Score: {score:.3f}")
+        print("✅ GB trained - Score: {:.3f}".format(score))
         return model
         
     except Exception as e:
-        print(f"❌ GB training error: {e}")
+        print("❌ GB training error: {}".format(e))
         return None
 
 # ======== SAFE STRATEGY FUNCTIONS ========
@@ -652,7 +652,7 @@ def predict_S1():
             probs = S1_model.predict_proba([feats])[0]
             return _norm(probs)
         except Exception as e:
-            print(f"⚠️ S1 prediction error: {e}")
+            print("⚠️ S1 prediction error: {}".format(e))
             # Retrain on error
             S1_model = train_randomforest_advanced()
             if S1_model:
@@ -663,7 +663,7 @@ def predict_S1():
                     pass
             return _norm([1] * 10)
     except Exception as e:
-        print(f"⚠️ S1 error: {e}")
+        print("⚠️ S1 error: {}".format(e))
         return _norm([1] * 10)
 
 def predict_S2():
@@ -684,7 +684,7 @@ def predict_S2():
             probs = S2_model.predict_proba([feats])[0]
             return _norm(probs)
         except Exception as e:
-            print(f"⚠️ S2 prediction error: {e}")
+            print("⚠️ S2 prediction error: {}".format(e))
             S2_model = train_gradientboosting_advanced()
             if S2_model:
                 try:
@@ -694,7 +694,7 @@ def predict_S2():
                     pass
             return _norm([1] * 10)
     except Exception as e:
-        print(f"⚠️ S2 error: {e}")
+        print("⚠️ S2 error: {}".format(e))
         return _norm([1] * 10)
 
 def predict_S4():
@@ -713,7 +713,7 @@ def predict_S4():
         
         return _norm(counts)
     except Exception as e:
-        print(f"⚠️ S4 error: {e}")
+        print("⚠️ S4 error: {}".format(e))
         return _norm([1] * 10)
 
 def predict_S5():
@@ -736,7 +736,7 @@ def predict_S5():
         inv_gaps = [1.0 / (gaps[d] + 1) for d in range(10)]
         return _norm(inv_gaps)
     except Exception as e:
-        print(f"⚠️ S5 error: {e}")
+        print("⚠️ S5 error: {}".format(e))
         return _norm([1] * 10)
 
 def predict_M1():
@@ -755,7 +755,7 @@ def predict_M1():
         
         return _norm(alpha)
     except Exception as e:
-        print(f"⚠️ M1 error: {e}")
+        print("⚠️ M1 error: {}".format(e))
         return _norm([1] * 10)
 
 def predict_M2():
@@ -784,4 +784,285 @@ def predict_M2():
         
         return _norm(hazards)
     except Exception as e:
-        print(f"⚠
+        print("⚠️ M2 error: {}".format(e))
+        return _norm([1] * 10)
+
+def predict_M3():
+    """Safe Residue prediction"""
+    try:
+        if len(digits) < 20:
+            return _norm([1] * 10)
+        
+        # Residue analysis
+        residues = np.zeros(10)
+        for d in range(10):
+            residues[d] = sum(1 for x in digits[-20:] if x % 10 == d)
+        
+        return _norm(residues)
+    except Exception as e:
+        print("⚠️ M3 error: {}".format(e))
+        return _norm([1] * 10)
+
+def predict_A1():
+    """Safe Spectral Analysis prediction"""
+    try:
+        if len(digits) < 50:
+            return _norm([1] * 10)
+        
+        # Simple frequency domain analysis
+        recent = np.array(digits[-50:])
+        freqs = np.zeros(10)
+        
+        for d in range(10):
+            mask = (recent == d)
+            if np.any(mask):
+                positions = np.where(mask)[0]
+                if len(positions) > 1:
+                    intervals = np.diff(positions)
+                    freqs[d] = 1.0 / (np.mean(intervals) + 1)
+                else:
+                    freqs[d] = 0.1
+            else:
+                freqs[d] = 0.01
+        
+        return _norm(freqs)
+    except Exception as e:
+        print("⚠️ A1 error: {}".format(e))
+        return _norm([1] * 10)
+
+def predict_A2():
+    """Safe Markov Chain prediction"""
+    try:
+        if len(digits) < 30:
+            return _norm([1] * 10)
+        
+        # Build transition matrix
+        transitions = np.zeros((10, 10))
+        for i in range(len(digits) - 1):
+            curr, next_d = digits[i], digits[i + 1]
+            if 0 <= curr <= 9 and 0 <= next_d <= 9:
+                transitions[curr][next_d] += 1
+        
+        # Normalize transitions
+        for i in range(10):
+            total = transitions[i].sum()
+            if total > 0:
+                transitions[i] = transitions[i] / total
+            else:
+                transitions[i] = np.ones(10) / 10.0
+        
+        # Predict based on last digit
+        if len(digits) > 0 and 0 <= digits[-1] <= 9:
+            return _norm(transitions[digits[-1]])
+        else:
+            return _norm([1] * 10)
+    except Exception as e:
+        print("⚠️ A2 error: {}".format(e))
+        return _norm([1] * 10)
+
+def predict_A3():
+    """Safe Quantum Inspired prediction"""
+    try:
+        if len(digits) < 20:
+            return _norm([1] * 10)
+        
+        # Quantum-inspired superposition
+        recent = digits[-30:] if len(digits) >= 30 else digits
+        weights = np.ones(10)
+        
+        # Apply quantum-like interference
+        for i, d in enumerate(recent):
+            if 0 <= d <= 9:
+                phase = (i * np.pi) / len(recent)
+                weights[d] += np.cos(phase) + 1
+        
+        return _norm(weights)
+    except Exception as e:
+        print("⚠️ A3 error: {}".format(e))
+        return _norm([1] * 10)
+
+# ======== ENSEMBLE PREDICTION ========
+def get_ensemble_prediction():
+    """Get weighted ensemble prediction from all strategies"""
+    try:
+        predictions = {}
+        
+        # Get all strategy predictions
+        strategies = {
+            'S1': predict_S1, 'S2': predict_S2, 'S4': predict_S4, 'S5': predict_S5,
+            'M1': predict_M1, 'M2': predict_M2, 'M3': predict_M3,
+            'A1': predict_A1, 'A2': predict_A2, 'A3': predict_A3
+        }
+        
+        for name, func in strategies.items():
+            try:
+                pred = func()
+                predictions[name] = pred
+            except Exception as e:
+                print("⚠️ Strategy {} failed: {}".format(name, e))
+                predictions[name] = _norm([1] * 10)
+        
+        # Weighted ensemble
+        ensemble = np.zeros(10)
+        total_weight = 0
+        
+        for name, pred in predictions.items():
+            weight = ENSEMBLE_WEIGHTS.get(name, 0.1)
+            ensemble += weight * pred
+            total_weight += weight
+        
+        if total_weight > 0:
+            ensemble = ensemble / total_weight
+        else:
+            ensemble = np.ones(10) / 10.0
+        
+        return _norm(ensemble), predictions
+    except Exception as e:
+        print("⚠️ Ensemble error: {}".format(e))
+        return _norm([1] * 10), {}
+
+# ======== TELEGRAM BOT HANDLERS ========
+@bot.message_handler(commands=['start', 'help'])
+def send_welcome(message):
+    try:
+        welcome_text = """🎯 **Kolkata FF Prediction Bot**
+
+🤖 **Commands:**
+/predict - Get next digit prediction
+/stats - View strategy statistics  
+/reload - Reload data from sheets
+/help - Show this help
+
+🔮 **Features:**
+• Advanced ML predictions
+• Multiple strategy ensemble
+• Real-time data updates
+• Performance tracking
+
+💡 **Note:** Predictions are for entertainment only!"""
+        
+        bot.reply_to(message, welcome_text, parse_mode='Markdown')
+    except Exception as e:
+        print("⚠️ Welcome error: {}".format(e))
+
+@bot.message_handler(commands=['predict', 'p'])
+def predict_handler(message):
+    try:
+        if len(digits) < 20:
+            bot.reply_to(message, "❌ Not enough data for prediction. Loading...")
+            if load_google_sheets_data():
+                bot.reply_to(message, "✅ Data loaded. Try /predict again.")
+            else:
+                bot.reply_to(message, "❌ Failed to load data.")
+            return
+        
+        # Get predictions
+        ensemble, individual = get_ensemble_prediction()
+        
+        # Find top predictions
+        top_indices = np.argsort(ensemble)[-3:][::-1]
+        
+        # Format response
+        response = "🎯 **KOLKATA FF PREDICTION**\n\n"
+        response += "🏆 **Top Predictions:**\n"
+        
+        for i, idx in enumerate(top_indices):
+            prob = ensemble[idx] * 100
+            confidence = "🔥" if prob > 15 else "⭐" if prob > 12 else "💫"
+            response += "{} **{}** - {:.1f}%\n".format(confidence, idx, prob)
+        
+        response += "\n📊 **All Probabilities:**\n"
+        for d in range(10):
+            bar_length = int(ensemble[d] * 20)
+            bar = "█" * bar_length + "░" * (5 - bar_length)
+            response += "{}: {} {:.1f}%\n".format(d, bar, ensemble[d] * 100)
+        
+        response += "\n📈 **Data:** {} records".format(len(digits))
+        response += "\n🕐 **Time:** {}".format(datetime.now().strftime("%H:%M:%S"))
+        
+        bot.reply_to(message, response, parse_mode='Markdown')
+        
+    except Exception as e:
+        print("⚠️ Predict error: {}".format(e))
+        bot.reply_to(message, "❌ Prediction failed. Try again.")
+
+@bot.message_handler(commands=['stats'])
+def stats_handler(message):
+    try:
+        all_stats = [S1_stats, S2_stats, S4_stats, S5_stats, M1_stats, M2_stats, M3_stats, A1_stats, A2_stats, A3_stats]
+        
+        response = "📊 **STRATEGY STATISTICS**\n\n"
+        
+        for stats in all_stats:
+            if stats['total'] > 0:
+                acc = stats['acc']
+                status = "🔥" if acc > 25 else "⭐" if acc > 20 else "💫" if acc > 15 else "📊"
+                response += "{} **{}**\n".format(status, stats['name'])
+                response += "   Accuracy: {:.1f}% ({}/{})\n".format(acc, stats['ok'], stats['total'])
+                
+                if stats.get('best_acc', 0) > 0:
+                    response += "   Best: {:.1f}%\n".format(stats['best_acc'])
+                response += "\n"
+        
+        response += "🎯 **Total Records:** {}\n".format(len(digits))
+        response += "🕐 **Last Update:** {}".format(datetime.now().strftime("%H:%M:%S"))
+        
+        bot.reply_to(message, response, parse_mode='Markdown')
+    except Exception as e:
+        print("⚠️ Stats error: {}".format(e))
+        bot.reply_to(message, "❌ Stats failed.")
+
+@bot.message_handler(commands=['reload'])
+def reload_handler(message):
+    try:
+        bot.reply_to(message, "🔄 Reloading data...")
+        success = load_google_sheets_data()
+        
+        if success:
+            bot.reply_to(message, "✅ Data reloaded! {} records available.".format(len(digits)))
+        else:
+            bot.reply_to(message, "❌ Failed to reload data.")
+    except Exception as e:
+        print("⚠️ Reload error: {}".format(e))
+        bot.reply_to(message, "❌ Reload failed.")
+
+# ======== MAIN EXECUTION ========
+def run_flask():
+    """Run Flask server"""
+    try:
+        port = int(os.getenv('PORT', 5000))
+        app.run(host='0.0.0.0', port=port, debug=False)
+    except Exception as e:
+        print("⚠️ Flask error: {}".format(e))
+
+def main():
+    """Main execution function"""
+    print("🚀 Starting Kolkata FF Bot...")
+    
+    # Load learning data
+    load_learning_data()
+    
+    # Initial data load
+    print("📊 Loading initial data...")
+    if load_google_sheets_data():
+        print("✅ Initial data loaded: {} records".format(len(digits)))
+    else:
+        print("⚠️ Initial data load failed")
+    
+    # Start Flask in separate thread
+    flask_thread = threading.Thread(target=run_flask, daemon=True)
+    flask_thread.start()
+    
+    print("🤖 Bot started successfully!")
+    print("📡 Telegram bot polling...")
+    
+    # Start bot polling
+    try:
+        bot.infinity_polling(timeout=10, long_polling_timeout=5)
+    except Exception as e:
+        print("❌ Bot polling error: {}".format(e))
+    finally:
+        save_learning_data()
+
+if __name__ == "__main__":
+    main()
