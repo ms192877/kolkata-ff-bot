@@ -4,3 +4,5 @@ numpy
 scikit-learn
 flask
 requests
+joblib
+gunicorn
