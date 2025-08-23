@@ -973,9 +973,18 @@ def predict_handler(message):
         
         response += "\n📊 **All Probabilities:**\n"
         for d in range(10):
-            bar_length = int(ensemble[d] * 20)
-            bar = "█" * bar_length + "░" * (5 - bar_length)
-            response += "{}: {} {:.1f}%\n".format(d, bar, ensemble[d] * 100)
+            prob_percent = ensemble[d] * 100
+            # Clean percentage display with emoji indicators
+            if prob_percent >= 12:
+                indicator = "🔥"
+            elif prob_percent >= 10:
+                indicator = "⭐"
+            elif prob_percent >= 8:
+                indicator = "💫"
+            else:
+                indicator = "📊"
+            
+            response += "{} {}: {:.1f}%\n".format(indicator, d, prob_percent)
         
         response += "\n📈 **Data:** {} records".format(len(digits))
         response += "\n🕐 **Time:** {}".format(datetime.now().strftime("%H:%M:%S"))
