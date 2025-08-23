@@ -1,8 +1,7 @@
-pyTelegramBotAPI
-pandas
-numpy
-scikit-learn
+telebot
 flask
+numpy
+pandas
+scikit-learn
+scipy
 requests
-joblib
-gunicorn
