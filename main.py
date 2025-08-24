@@ -14,7 +14,7 @@ from sklearn.model_selection import train_test_split, StratifiedKFold
 from sklearn.metrics import accuracy_score
 
 # ======== CONFIG (kept as-is) ========
-BOT_TOKEN = "830621xxxx:AAHl7sxAEEq0FT750MAThHrAioYyAbRI1oI"
+BOT_TOKEN = "8306210029:AAHl7sxAEEq0FT750MAThHrAioYyAbRI1oI"
 ADMIN_CHAT_ID = None  # auto-filled from first /start if None
 SPREADSHEET_ID = "10wI8T-NzqYsq6L73kPZ_bibuv2dw7xhQAmOr0msvk1A"
 CSV_URL = f"https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}/export?format=csv"
